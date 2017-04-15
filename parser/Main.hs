@@ -30,6 +30,8 @@ main = do
 
     let fpi = parseLiquipedia li
 
+    writeFile "test.txt" (show fpi)
+
     putStrLn $ renderMarkup $ renderPage fpi p
 
     return ()

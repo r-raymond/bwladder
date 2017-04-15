@@ -33,13 +33,16 @@ findRows = element "table"
 findRowInfo :: Cursor -> [Cursor]
 findRowInfo = element "td"
 
-processUserNames :: Text -> [Cursor] -> Maybe [Text]
-processUserNames name curs = do
-    let cont = concat $ fmap (\x -> x $// content) curs
-        usernames = filter (\x -> (x /= "")
-                               && (x /= "\n")
-                               && (x /= name)) cont
-    user <- head usernames
+nth :: Int -> [a] -> Maybe a
+nth _ [] = Nothing
+nth 0 (x:xs) = Just x
+nth n (x:xs) = nth (n-1) xs
+
+processUserNames :: [Cursor] -> Maybe [Text]
+processUserNames curs = do
+    f <- nth 2 curs
+    let cont = f $// content
+    user <- head cont
     return $ fmap strip (split (== ',') user)
 
 processID :: [Cursor] -> Maybe Text
@@ -65,7 +68,7 @@ processLink curs = do
 processInfo :: [Cursor] -> Maybe LiquipediaEntry
 processInfo curs = do
     name <- processID curs
-    usernames <- processUserNames name curs
+    usernames <- processUserNames curs
     race <- processRace curs
     link <- processLink curs
 
