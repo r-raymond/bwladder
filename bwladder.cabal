@@ -15,11 +15,21 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
+  exposed-modules:     Liquipedia
+                     , Common
+                     , Fish
+                     , Render
   build-depends:       base >= 4.7 && < 5
+                     , protolude
+                     , text
+                     , xml-conduit
+                     , html-conduit
+                     , blaze-html
   default-language:    Haskell2010
+  default-extensions:  NoImplicitPrelude
+                     , OverloadedStrings
 
-executable bwladder-parser
+executable bwl-parser
   hs-source-dirs:      parser
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
