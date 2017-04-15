@@ -13,6 +13,7 @@ import qualified Text.Blaze.Html5.Attributes as A
 import           Fish
 import           Liquipedia
 
+
 isPlayer :: Text -> LiquipediaEntry -> Bool
 isPlayer n (LiquipediaEntry _ _ _ us) = (toLower n) `elem` (fmap toLower us)
 

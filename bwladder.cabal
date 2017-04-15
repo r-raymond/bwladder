@@ -29,7 +29,7 @@ library
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
 
-executable bwl-parser
+executable bwl
   hs-source-dirs:      parser
   main-is:             Main.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
