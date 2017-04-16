@@ -44,8 +44,13 @@ renderPage l r = do
         H.title "Fish Server Rankings"
         H.link H.! A.rel "stylesheet"
                H.! A.href "https://unpkg.com/purecss@0.6.2/build/pure-min.css"
+        H.link H.! A.rel "stylesheet"
+               H.! A.href "css/layouts/side-menu.css"
     H.body $ do
-        H.div H.! A.class_ "pure-g" $ do
+        H.div H.! A.class_ "header" $ do
+            H.h1 "Starcraft Broodwar Ranking"
+            H.h2 "Last updated on ..."
+        H.div H.! A.class_ "pure-g content" $ do
             H.div H.! A.class_ "pure-u-1-1" $ do
                 H.table H.! A.class_ "pure-table pure-table-striped" $ do
                     H.thead $
