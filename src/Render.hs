@@ -38,8 +38,8 @@ renderColumn l (RankEntry r id wins losses points) = do
         H.td $ (H.toHtml ((show losses) :: Text))
         H.td $ (H.toHtml ((show points) :: Text))
 
-renderPage :: [LiquipediaEntry] -> [RankEntry] -> H.Html
-renderPage l r = do
+renderPage :: [LiquipediaEntry] -> FishLadder -> H.Html
+renderPage l (time, r) = do
     H.head $ do
         H.title "Fish Server Rankings"
         H.link H.! A.rel "stylesheet"
@@ -47,21 +47,46 @@ renderPage l r = do
         H.link H.! A.rel "stylesheet"
                H.! A.href "css/layouts/side-menu.css"
     H.body $ do
-        H.div H.! A.class_ "header" $ do
-            H.h1 "Starcraft Broodwar Ranking"
-            H.h2 "Last updated on ..."
-        H.div H.! A.class_ "pure-g content" $ do
-            H.div H.! A.class_ "pure-u-1-1" $ do
-                H.table H.! A.class_ "pure-table pure-table-striped" $ do
-                    H.thead $
-                        H.tr $ do
-                            H.th $ "Rank"
-                            H.th $ "Player"
-                            H.th $ "Race"
-                            H.th $ "Player ID"
-                            H.th $ "Wins"
-                            H.th $ "Losses"
-                            H.th $ "Points"
-                    H.tbody $
-                        sequence_ $ fmap (renderColumn l) r
+        H.div H.! A.id "layout" $ do
+            --menu
+            H.div H.! A.id "main" $ do
+                H.div H.! A.class_ "header" $ do
+                    H.h1 "Starcraft Broodwar Ranking"
+                    H.h2 (H.toHtml $ "Last updated on " ++ show time)
+                H.div H.! A.class_ "content" $ do
+                    H.table H.! A.class_ "pure-table pure-table-striped" $ do
+                        H.thead $
+                            H.tr $ do
+                                H.th $ "Rank"
+                                H.th $ "Player"
+                                H.th $ "Race"
+                                H.th $ "Player ID"
+                                H.th $ "Wins"
+                                H.th $ "Losses"
+                                H.th $ "Points"
+                        H.tbody $
+                            sequence_ $ fmap (renderColumn l) r
+                    H.p $ "Ladder data from https://www.fishserver.net, (C) Rank system by fish system development team"
+                    H.p $ "Nick data from http://wiki.teamliquid.net/starcraft/Fish_Server CC-BY-SA"
+            H.script H.! A.src "js/ui.js" $ ""
 
+menu :: H.Html
+menu = do
+    H.a H.! A.href "#menu"
+        H.! A.id "menuLink"
+        H.! A.class_ "menu-link" $
+            H.span $ ""
+    H.div H.! A.id "menu" $
+        H.div H.! A.class_ "pure-menu" $ do
+                H.a H.! A.class_ "pure-menu-heading"
+                    H.! A.href "index.html" $
+                        "BWladder"
+                H.ul H.! A.class_ "pure-menu-list" $ do
+                    H.li H.! A.class_ "pure-menu-item" $
+                         H.a H.! A.href "index.html"
+                             H.! A.class_ "pure-menu-link" $
+                            "Ladder"
+                    H.li H.! A.class_ "pure-menu-item" $
+                         H.a H.! A.href "index.html"
+                             H.! A.class_ "pure-menu-link" $
+                            "About"

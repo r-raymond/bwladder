@@ -25,6 +25,9 @@ library
                      , xml-conduit
                      , html-conduit
                      , blaze-html
+                     , time
+                     , directory
+                     , HTTP
   default-language:    Haskell2010
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
@@ -41,6 +44,9 @@ executable bwl
                      , xml-conduit
                      , blaze-html
                      , blaze-markup
+                     , time
+                     , directory
+                     , HTTP
   default-language:    Haskell2010
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings

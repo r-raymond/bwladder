@@ -2,36 +2,47 @@ module Main where
 
 import           Protolude
 
-import           Data.Text                (lines, split, strip, words, toLower)
-import           Data.Text.IO             (hGetContents)
-import           System.IO                (hSetEncoding, utf8)
+import           Data.Text                   (lines, split, strip, toLower,
+                                              words)
+import           Data.Text.IO                (hGetContents)
+import           System.IO                   (hSetEncoding, utf8)
 
-import Data.String (fromString)
-import qualified Text.Blaze.Html5         as H
-import qualified Text.Blaze.Html5.Attributes         as A
-import           Text.Blaze.Renderer.Utf8 (renderMarkup)
+import           Data.String                 (fromString)
+import           Data.Time.Clock
+import           Data.Time.Format
+import           Network.HTTP
+import           System.Directory
+import qualified Text.Blaze.Html5            as H
+import qualified Text.Blaze.Html5.Attributes as A
+import           Text.Blaze.Renderer.Utf8    (renderMarkup)
 import           Text.HTML.DOM
 import           Text.XML.Cursor
 
-import Common
-import Fish
-import Liquipedia
-import Render
+import           Common
+import           Fish
+import           Liquipedia
+import           Render
 
 main :: IO ()
 main = do
-    [file, f2] <- getArgs
 
-    con <- readUtf8 file
+    fish <- parseFishLadder
 
-    let (Just p) = parseFish con
+    putStrLn ("Parsed " ++ (show (length fish)) ++ " fish files")
 
-    li <- readUtf8 f2
+    let sortedFish = sortBy (\(x, _) (y, _) -> compare y x) fish
+        (Just freshest) = head sortedFish
 
-    let fpi = parseLiquipedia li
+    putStrLn ("Newest from " ++ (show (fst freshest)))
 
-    writeFile "test.txt" (show fpi)
+    liquiepedia <- simpleHTTP (getRequest "http://wiki.teamliquid.net/starcraft/Fish_Server")
+                   >>= getResponseBody
 
-    putStrLn $ renderMarkup $ renderPage fpi p
+    let fpi = parseLiquipedia (toS liquiepedia)
+
+    putStrLn ("Parsed " ++ (show (length fpi)) ++ " liquipedia columns")
+
+    writeFile "docs/index.html" (toS $ renderMarkup $ renderPage fpi freshest)
+    putStrLn ("Wrote website to docs/index.html" :: Text)
 
     return ()

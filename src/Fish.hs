@@ -1,11 +1,19 @@
 module Fish
     ( RankEntry(..)
-    , parseFish
+    , FishLadder
+    , parseFishLadder
     ) where
 
 import           Protolude
 
-import           Data.Text (lines, split, strip, toLower, words)
+import           Data.Text        (lines, split, strip, toLower, words)
+import           Data.Time.Clock
+import           System.Directory
+import           Data.Time.Format
+
+import Common
+
+type FishLadder = (UTCTime, [RankEntry])
 
 data RankEntry
     = RankEntry
@@ -27,4 +35,14 @@ parse _ = Nothing
 
 parseFish :: Text -> Maybe [RankEntry]
 parseFish t = sequence $ fmap parse (fmap words (lines t))
+
+parseFishLadder :: IO [FishLadder]
+parseFishLadder = do
+    files <- listDirectory "fish"
+    let go f = do
+            t <- parseTimeM True defaultTimeLocale rfc822DateFormat f :: IO UTCTime
+            c <- readUtf8 ("fish/" ++ f)
+            let (Just p) = parseFish c
+            return (t, p)
+    sequence $ fmap go files
 
