@@ -20,9 +20,17 @@ isPlayer n (LiquipediaEntry _ _ _ us) = (toLower n) `elem` (fmap toLower us)
 findPlayer :: Text -> [LiquipediaEntry] -> Maybe LiquipediaEntry
 findPlayer n l = head $ filter (isPlayer n) l
 
+ranking :: Int -> H.AttributeValue
+ranking x
+    | x <= 1149 = "f-rank"
+    | x <= 1399 = "e-rank"
+    | x <= 1699 = "d-rank"
+    | x <= 2199 = "c-rank"
+    | otherwise = "b-rank"
+
 renderColumn :: [LiquipediaEntry] -> RankEntry -> H.Html
 renderColumn l (RankEntry r id wins losses points) = do
-    H.tr $ do
+    H.tr H.! A.class_ (ranking points) $ do
         H.td $ (H.toHtml r)
         case findPlayer id l of
             Just (LiquipediaEntry race n p _) -> do

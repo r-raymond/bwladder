@@ -8,6 +8,25 @@ body {
 }
 
 /*
+ * Ranks
+ */
+.b-rank {
+    background: #e1f2fa;
+}
+.c-rank {
+    background: #fcebbd;
+}
+.d-rank {
+    background: #e1f2fa;
+}
+.e-rank {
+    background: #d3eda3;
+}
+.f-rank {
+    background: #f5ab9e;
+}
+
+/*
 Add transition to containers so they can push in and out.
 */
 #layout,
