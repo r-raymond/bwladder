@@ -33,11 +33,6 @@ findRows = element "table"
 findRowInfo :: Cursor -> [Cursor]
 findRowInfo = element "td"
 
-nth :: Int -> [a] -> Maybe a
-nth _ [] = Nothing
-nth 0 (x:xs) = Just x
-nth n (x:xs) = nth (n-1) xs
-
 processUserNames :: [Cursor] -> Maybe [Text]
 processUserNames curs = do
     f <- nth 2 curs

@@ -32,6 +32,7 @@ main = do
 
     let sortedFish = sortBy (\(x, _) (y, _) -> compare y x) fish
         (Just freshest) = head sortedFish
+        (Just secondFreshest) = nth 1 sortedFish
 
     putStrLn ("Newest from " ++ (show (fst freshest)))
 
@@ -42,7 +43,7 @@ main = do
 
     putStrLn ("Parsed " ++ (show (length fpi)) ++ " liquipedia columns")
 
-    writeFile "docs/index.html" (toS $ renderMarkup $ renderPage fpi freshest)
+    writeFile "docs/index.html" (toS $ renderMarkup $ renderPage fpi secondFreshest freshest)
     putStrLn ("Wrote website to docs/index.html" :: Text)
 
     return ()

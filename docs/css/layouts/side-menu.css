@@ -8,6 +8,25 @@ body {
 }
 
 /*
+ * Diff colors
+ */
+.increase {
+    background: #d3eda3;
+    color: #72962e;
+    font-weight: bold;
+}
+.decrease {
+    background: #f5ab9e;
+    color: #8c3a2b;
+    font-weight: bold;
+}
+.steady {
+    background: #fcebbd;
+    color: #af9540;
+    font-weight: bold;
+}
+
+/*
  * Ranks
  */
 .b-rank {
