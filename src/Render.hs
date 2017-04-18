@@ -21,9 +21,9 @@ findPlayer :: Text -> [LiquipediaEntry] -> Maybe LiquipediaEntry
 findPlayer n l = head $ filter (isPlayer n) l
 
 displayRace :: Race -> H.Html
-displayRace Protoss = "P"
-displayRace Terran  = "T"
-displayRace Zerg    = "Z"
+displayRace Protoss = H.img H.! A.src "png/Picon_small_bw.png"
+displayRace Terran  = H.img H.! A.src "png/Ticon_small_bw.png"
+displayRace Zerg    = H.img H.! A.src "png/Zicon_small_bw.png"
 
 ranking :: Int -> H.AttributeValue
 ranking x
@@ -56,10 +56,10 @@ renderColumn l old_ranks (RankEntry r id wins losses points) = do
                 H.td $
                     H.a H.! A.href (fromString $ toS p) $
                         H.toHtml n
-                H.td (displayRace race)
+                H.td H.! A.class_ "centered" $ (displayRace race)
             Nothing -> do
                 H.td "Unknown"
-                H.td "?"
+                H.td H.! A.class_ "centered" $ "?"
         H.td $ (H.toHtml id)
         H.td $ (H.toHtml ((show wins) :: Text))
         H.td $ (H.toHtml ((show losses) :: Text))

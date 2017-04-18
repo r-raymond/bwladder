@@ -7,6 +7,10 @@ body {
     height: auto;
 }
 
+.centered {
+    text-align: center;
+}
+
 /*
  * Diff colors
  */
