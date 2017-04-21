@@ -27,7 +27,7 @@ displayRace Protoss = H.img H.! A.src "png/Picon_small_bw.png"
 displayRace Terran  = H.img H.! A.src "png/Ticon_small_bw.png"
 displayRace Zerg    = H.img H.! A.src "png/Zicon_small_bw.png"
 
-data Page = Top100 | Top250 | Top2000 | Clans | Stats | About
+data Page = Top100 | Top250 | Top2000 | Foreigner | Clans | Stats | About
     deriving (Bounded, Enum, Eq, Show)
 
 header :: H.Html
@@ -41,18 +41,22 @@ header = H.head $ do
                    H.! A.href "font-awesome-4.7.0/css/font-awesome.min.css"
 
 
-renderPage :: [LiquipediaEntry] -> [FishLadder] -> Page -> H.Html
-renderPage liqui ladders page =
+renderPage :: [LiquipediaEntry] -> [LiquipediaEntry] -> [FishLadder] -> Page -> H.Html
+renderPage liqui foreigner ladders page =
     H.docTypeHtml $ do
         header
         H.body $ do
             H.div H.! A.id "layout" $ do
                 menu page
                 H.div H.! A.id "main" $ do
-                    renderContent liqui ladders page
+                    renderContent liqui foreigner ladders page
 
-renderTable :: Int -> [LiquipediaEntry] -> [FishLadder] -> H.Html
-renderTable n l f = do
+renderTable :: Int
+            -> [LiquipediaEntry]
+            -> [FishLadder]
+            -> ([LiquipediaEntry] -> RankEntry -> Bool)     -- ^ Should this column be rendered?
+            -> H.Html
+renderTable n l f p = do
     let (Just (t, a)) = nth 0 f
         (Just (_, b)) = nth 1 f
     H.table H.! A.class_ "pure-table pure-table-striped" $ do
@@ -67,39 +71,49 @@ renderTable n l f = do
                     H.th $ "Losses"
                     H.th $ "Points"
             H.tbody $
-                sequence_ $ fmap (renderColumn l b) (take n a)
+                sequence_ $ fmap (renderColumn l b) (filter (p l) (take n a))
     H.p $ "Ladder data from https://www.fishserver.net, (C) Rank system by fish system development team"
     H.p $ "Nick data from http://wiki.teamliquid.net/starcraft/Fish_Server CC-BY-SA"
 
-renderContent :: [LiquipediaEntry] -> [FishLadder] -> Page -> H.Html
-renderContent l f Top100 = do
+renderContent :: [LiquipediaEntry] -> [LiquipediaEntry] -> [FishLadder] -> Page -> H.Html
+renderContent l _ f Top100 = do
     let (Just (t, a)) = nth 0 f
         (Just (_, b)) = nth 1 f
     H.div H.! A.class_ "header" $ do
         H.h1 "Starcraft Broodwar Ranking"
         H.h2 (H.toHtml $ "Last updated on " ++ show t)
     H.div H.! A.class_ "content" $ do
-        renderTable 100 l f
+        renderTable 100 l f (\_ _ -> True)
 
-renderContent l f Top250 = do
+renderContent l _ f Top250 = do
     let (Just (t, a)) = nth 0 f
         (Just (_, b)) = nth 1 f
     H.div H.! A.class_ "header" $ do
         H.h1 "Starcraft Broodwar Ranking"
         H.h2 (H.toHtml $ "Last updated on " ++ show t)
     H.div H.! A.class_ "content" $ do
-        renderTable 250 l f
+        renderTable 250 l f (\_ _ -> True)
 
-renderContent l f Top2000 = do
+renderContent l _ f Top2000 = do
     let (Just (t, a)) = nth 0 f
         (Just (_, b)) = nth 1 f
     H.div H.! A.class_ "header" $ do
         H.h1 "Starcraft Broodwar Ranking"
         H.h2 (H.toHtml $ "Last updated on " ++ show t)
     H.div H.! A.class_ "content" $ do
-        renderTable 2000 l f
+        renderTable 2000 l f (\_ _ -> True)
 
-renderContent _ _ _ = "TODO"
+renderContent _ l f Foreigner = do
+    let (Just (t, a)) = nth 0 f
+        (Just (_, b)) = nth 1 f
+    H.div H.! A.class_ "header" $ do
+        H.h1 "Starcraft Broodwar Ranking"
+        H.h2 (H.toHtml $ "Last updated on " ++ show t)
+    H.div H.! A.class_ "content" $ do
+        renderTable 2000 l f (\x r -> isJust $ findPlayer (nick r) x)
+
+
+renderContent _ _ _ _ = "TODO"
 
 
 ranking :: Int -> H.AttributeValue

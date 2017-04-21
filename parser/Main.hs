@@ -2,8 +2,7 @@ module Main where
 
 import           Protolude
 
-import           Data.Text                   (lines, split, strip, toLower,
-                                              words)
+import qualified Data.Text                   as T
 import           Data.Text.IO                (hGetContents)
 import           System.IO                   (hSetEncoding, utf8)
 
@@ -35,16 +34,19 @@ main = do
 
     putStrLn ("Newest from " ++ (show (fst freshest)))
 
-    liquiepedia <- simpleHTTP (getRequest "http://wiki.teamliquid.net/starcraft/Fish_Server")
-                   >>= getResponseBody
+    liquipedia <- fmap toS $ simpleHTTP (getRequest "http://wiki.teamliquid.net/starcraft/Fish_Server")
+                                     >>= getResponseBody
 
-    let fpi = parseLiquipedia (toS liquiepedia)
+    let all = parseLiquipedia liquipedia
+        (_, tempP) = T.breakOn "List of Foreigner Usernames on Fish" liquipedia
+        (_, lastP) = T.breakOn "List of Foreigner Usernames on Fish" (T.drop 1 tempP)
+        foreigner = parseLiquipedia lastP
 
-    putStrLn ("Parsed " ++ (show (length fpi)) ++ " liquipedia columns")
+    putStrLn ("Parsed " ++ (show (length all)) ++ " liquipedia columns, " ++ (show $ length foreigner) ++ " foreigners")
 
     let pages = [minBound .. maxBound] :: [Page]
         pag = \p -> do
-                writeFile ("docs/" ++ show p ++ ".html") (toS $ renderMarkup $ renderPage fpi sortedFish p)
+                writeFile ("docs/" ++ show p ++ ".html") (toS $ renderMarkup $ renderPage all foreigner sortedFish p)
                 putStrLn ("Wrote website to docs/" ++ (show p))
 
     sequence_ $ fmap pag pages
