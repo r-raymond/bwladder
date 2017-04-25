@@ -15,38 +15,48 @@ body {
  * Diff colors
  */
 .increase {
-    background: #d3eda3;
-    color: #72962e;
+    color: #4e9a06;
     font-weight: bold;
 }
 .decrease {
-    background: #f5ab9e;
-    color: #8c3a2b;
+    color: #a40000;
     font-weight: bold;
 }
 .steady {
-    background: #fcebbd;
-    color: #af9540;
+    color: #c4a000;
     font-weight: bold;
 }
 
 /*
  * Ranks
  */
+.s-rank {
+    color: #c4a000;
+}
+.a-rank {
+    color: #4e9a06;
+}
 .b-rank {
-    background: #e1f2fa;
+    color: #204a87;
 }
 .c-rank {
-    background: #fcebbd;
+    color: #ce5c00;
 }
 .d-rank {
-    background: #e1f2fa;
+    color: #a40000;
 }
 .e-rank {
-    background: #d3eda3;
+    color: #8f5902;
 }
 .f-rank {
-    background: #f5ab9e;
+    color: #2e3436;
+}
+
+/*
+ * Ranking
+ */
+.ranking {
+    font-weight: bolder;
 }
 
 /*
@@ -84,7 +94,7 @@ The content `<div>` is where all your content goes.
 .content {
     margin: 0 auto;
     padding: 0 2em;
-    max-width: 800px;
+    max-width: 900px;
     margin-bottom: 50px;
     line-height: 1.6em;
 }

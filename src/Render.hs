@@ -62,6 +62,7 @@ renderTable n l f p = do
     H.table H.! A.class_ "pure-table pure-table-striped" $ do
             H.thead $
                 H.tr $ do
+                    H.th $ "Pos"
                     H.th $ "Rank"
                     H.th $ "Diff"
                     H.th $ "Player"
@@ -116,27 +117,31 @@ renderContent _ l f Foreigner = do
 renderContent _ _ _ _ = "TODO"
 
 
-ranking :: Int -> H.AttributeValue
+ranking :: Int -> H.Html
 ranking x
-    | x <= 1149 = "f-rank"
-    | x <= 1399 = "e-rank"
-    | x <= 1699 = "d-rank"
-    | x <= 2199 = "c-rank"
-    | otherwise = "b-rank"
+    | x <= 800  = H.td H.! A.class_ "centered ranking f-rank" $ "F-"
+    | x <= 1099 = H.td H.! A.class_ "centered ranking f-rank" $ "F"
+    | x <= 1399 = H.td H.! A.class_ "centered ranking e-rank" $ "E"
+    | x <= 1699 = H.td H.! A.class_ "centered ranking d-rank" $ "D"
+    | x <= 1999 = H.td H.! A.class_ "centered ranking c-rank" $ "C"
+    | x <= 2299 = H.td H.! A.class_ "centered ranking b-rank" $ "B"
+    | x <= 2599 = H.td H.! A.class_ "centered ranking a-rank" $ "A"
+    | otherwise = H.td H.! A.class_ "centered ranking s-rank" $ "S"
 
 findRankEntry :: Text -> [RankEntry] -> Maybe RankEntry
 findRankEntry id rks = head (filter (\x -> nick x == id) rks)
 
 displayChange :: Int -> H.Html
 displayChange x
-    | x < 0 = H.td H.! A.class_ "decrease" $ H.i H.! A.class_ "fa fa-arrow-down" $ H.toHtml ("  (" ++ show x ++ ")")
-    | x > 0 = H.td H.! A.class_ "increase" $ H.i H.! A.class_ "fa fa-arrow-up" $ H.toHtml ("  (+" ++ show x ++ ")")
-    | x == 0 = H.td H.! A.class_ "steady"  $ H.i H.! A.class_ "fa fa-arrow-left" $ ""
+    | x < 0 = H.td H.! A.class_ "centered decrease" $ H.i H.! A.class_ "fa fa-arrow-down" $ H.toHtml ("  (" ++ show x ++ ")")
+    | x > 0 = H.td H.! A.class_ "centered increase" $ H.i H.! A.class_ "fa fa-arrow-up" $ H.toHtml ("  (+" ++ show x ++ ")")
+    | x == 0 = H.td H.! A.class_ "centered steady"  $ H.i H.! A.class_ "fa fa-arrow-left" $ ""
 
 renderColumn :: [LiquipediaEntry] -> [RankEntry] -> RankEntry -> H.Html
 renderColumn l old_ranks (RankEntry r id wins losses points) = do
-    H.tr H.! A.class_ (ranking points) $ do
-        H.td $ (H.toHtml r)
+    H.tr $ do
+        H.td H.! A.class_ "centered" $ (H.toHtml r)
+        ranking points
         case findRankEntry id old_ranks of
             (Just (RankEntry oldr _ _ _ _)) ->
                 displayChange (oldr - r)
