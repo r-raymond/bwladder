@@ -62,15 +62,15 @@ renderTable n l f p = do
     H.table H.! A.class_ "pure-table pure-table-striped" $ do
             H.thead $
                 H.tr $ do
-                    H.th $ "Pos"
-                    H.th $ "Rank"
-                    H.th $ "Diff"
-                    H.th $ "Player"
-                    H.th $ "Race"
-                    H.th $ "Player ID"
-                    H.th $ "Wins"
-                    H.th $ "Losses"
-                    H.th $ "Points"
+                    H.th H.! A.class_ "centered" $ "Pos"
+                    H.th H.! A.class_ "centered" $ "Rank"
+                    H.th H.! A.class_ "centered" $ "Diff"
+                    H.th H.! A.class_ "centered" $ "Player"
+                    H.th H.! A.class_ "centered" $ "Race"
+                    H.th H.! A.class_ "centered" $ "Player ID"
+                    H.th H.! A.class_ "centered" $ "Wins"
+                    H.th H.! A.class_ "centered" $ "Losses"
+                    H.th H.! A.class_ "centered" $ "Points"
             H.tbody $
                 sequence_ $ fmap (renderColumn l b) (filter (p l) (take n a))
     H.p $ "Ladder data from https://www.fishserver.net, (C) Rank system by fish system development team"
@@ -135,7 +135,7 @@ displayChange :: Int -> H.Html
 displayChange x
     | x < 0 = H.td H.! A.class_ "centered decrease" $ H.i H.! A.class_ "fa fa-arrow-down" $ H.toHtml ("  (" ++ show x ++ ")")
     | x > 0 = H.td H.! A.class_ "centered increase" $ H.i H.! A.class_ "fa fa-arrow-up" $ H.toHtml ("  (+" ++ show x ++ ")")
-    | x == 0 = H.td H.! A.class_ "centered steady"  $ H.i H.! A.class_ "fa fa-arrow-left" $ ""
+    | x == 0 = H.td H.! A.class_ "centered steady"  $ H.i H.! A.class_ "fa fa-circle" $ ""
 
 renderColumn :: [LiquipediaEntry] -> [RankEntry] -> RankEntry -> H.Html
 renderColumn l old_ranks (RankEntry r id wins losses points) = do
