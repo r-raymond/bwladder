@@ -38,8 +38,10 @@ main = do
                                      >>= getResponseBody
 
     let all = parseLiquipedia liquipedia
-        (_, tempP) = T.breakOn "List of Foreigner Usernames on Fish" liquipedia
-        (_, lastP) = T.breakOn "List of Foreigner Usernames on Fish" (T.drop 1 tempP)
+        (_, tempP1) = T.breakOn "List of Foreigner Usernames on Fish" liquipedia
+        (_, tempP2) = T.breakOn "List of Foreigner Usernames on Fish" (T.drop 1 tempP1)
+        (_, tempP3) = T.breakOn "List of Foreigner Usernames on Fish" (T.drop 1 tempP2)
+        (_, lastP) = T.breakOn "List of Foreigner Usernames on Fish" (T.drop 1 tempP3)
         foreigner = parseLiquipedia lastP
 
     putStrLn ("Parsed " ++ (show (length all)) ++ " liquipedia columns, " ++ (show $ length foreigner) ++ " foreigners")
